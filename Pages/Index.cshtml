@@ -89,13 +89,48 @@
     </form>
 
     @* <h1>Расширить анкету. Добавить:</h1>
-    <h2>1. Выбор города через select</h2>
-    <h2>2. Выбор основного языка программирования</h2>
-    <h2>3. Формат обучения (очно, заочно, дистанционное)</h2>
-    <h2>4. Инфомация о себе через тег textarea</h2>
-    <h2>5. Дополнить список технологий</h2> *@
+        <h2>1. Выбор города через select</h2>
+        <h2>2. Выбор основного языка программирования</h2>
+        <h2>3. Формат обучения (очно, заочно, дистанционное)</h2>
+        <h2>4. Инфомация о себе через тег textarea</h2>
+        <h2>5. Дополнить список технологий</h2> *@
 
-    <div id="result" class="result"></div>
+    <div id="result" class="student-card">
+        <div class="student-card-header">
+            <h2>Анкета отправлена</h2>
+            <p>Данные студента</p>
+        </div>
+        <div class="student-info">
+            <div class="info-item">
+                <span>Имя: </span>
+                <strong id="result-name"></strong>
+            </div>
+            <div class="info-item">
+                <span>Телефон: </span>
+                <strong id="result-phone"></strong>
+            </div>
+            <div class="info-item">
+                <span>Email: </span>
+                <strong id="result-email"></strong>
+            </div>
+            <div class="info-item">
+                <span>Специальность: </span>
+                <strong id="result-speciality"></strong>
+            </div>
+            <div class="info-item">
+                <span>Курс: </span>
+                <strong id="result-course"></strong>
+            </div>
+            <div class="info-item">
+                <span>Дата рождения: </span>
+                <strong id="result-birthdate"></strong>
+            </div>
+            <div class="info-item">
+                <span>Технологии: </span>
+                <strong id="result-technologies"></strong>
+            </div>
+        </div>
+    </div>
 
     @if (Model.Message != null)
     {
@@ -117,21 +152,29 @@
         event.preventDefault();
 
         const button = form.querySelector("button");
-        button.textContent = "Отправка..."
-        button.disabled = true;
-
         const formData = new FormData(form);
+        button.disabled = true;
+        button.textContent = "Отправка..."
+
         const response = await fetch("", {
             method: "POST",
             body: formData
         });
 
-        const result = await response.text();
-        console.log(result);
+        const data = await response.json();
         await new Promise(resolve => setTimeout(resolve, 1500));
-        console.log(result);
-        document.querySelector("#result").textContent = result;
+
+        document.querySelector("#result-name").textContent = data.Name;
+        document.querySelector("#result-phone").textContent = data.Phone;
+        document.querySelector("#result-email").textContent = data.Email;
+        document.querySelector("#result-speciality").textContent = data.Speciality;
+        document.querySelector("#result-course").textContent = data.Course;
+        document.querySelector("#result-birthdate").textContent = data.BirthDate;
+        document.querySelector("#result-technologies").textContent = data.Technologies;
+
+        console.log(data);
+        document.querySelector("#result").style.display = "block";
         button.disabled = false;
-        button.textContent = "Анкета успешно отправлена (❁´◡`❁)";
+        button.textContent = "Анкета успешно отправлена";
     })
 </script>
